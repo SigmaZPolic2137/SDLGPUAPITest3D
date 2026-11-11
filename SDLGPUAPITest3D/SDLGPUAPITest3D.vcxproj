@@ -143,11 +143,6 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SDL\SDL3-3.4.20\VisualC\SDL\SDL.vcxproj">
-      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\engine.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -157,6 +152,11 @@
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\engine.h" />
     <ClInclude Include="src\vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\SDL\SDL3-3.4.20\VisualC\SDL\SDL.vcxproj">
+      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

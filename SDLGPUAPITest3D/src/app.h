@@ -14,12 +14,17 @@ struct AppState {
 	int WindowHeight = 600;
 
 	bool FullScreen = false;
-	bool VSync = false;
+	bool VSync = true;
 	bool ShowFPS = false;
 
+	double FPSTimer = 0.0;
+	int FPSFrameCount = 0;
+
+	Uint64 StartTime = 0;
 	Uint64 LastTime = 0;
-	double DeltaTime = 0;
-	double ElapsedTime = 0;
+
+	double DeltaTime = 0.0;
+	double ElapsedTime = 0.0;
 
 	bool Debug = false;
 
@@ -28,6 +33,6 @@ struct AppState {
 	SDL_GPUBuffer * VertexBuffer = nullptr;
 };
 
-bool IsFullScreen(SDL_Window *);
-bool ToggleFullScreen(SDL_Window *, bool *);
-bool SetVSyncSettings(AppState *);
+bool SetFullScreen(AppState * AppState, bool Enabled);
+bool SetVSync(AppState * AppState, bool Enabled);
+bool SetShowFPS(AppState * AppState, bool Enabled);

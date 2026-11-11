@@ -1,6 +1,7 @@
 #define SDL_MAIN_USE_CALLBACKS
 
 #include "app.h"
+#include "engine.h"
 
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_events.h>
@@ -14,9 +15,6 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
-
-#include <array>
-#include <string>
 
 SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[]) {
 	AppState * State = new AppState;
@@ -45,7 +43,12 @@ SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[
 		return SDL_APP_FAILURE;
 	}
 
-	if (!SetVSyncSettings(State)) return SDL_APP_FAILURE;
+	SetFullScreen(State, State -> FullScreen);
+	SetVSync(State, State -> VSync);
+	SetShowFPS(State, State -> ShowFPS);
+
+	/*
+
 	if (!CreatePipeline(State)) return SDL_APP_FAILURE;
 
 	std::array Vertices {
@@ -55,6 +58,8 @@ SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[
 	};
 
 	if (!CreateVertexBuffer(State, Vertices)) return SDL_APP_FAILURE;
+
+	*/
 
 	SDL_ShowWindow(State -> Window);
 
@@ -67,11 +72,17 @@ SDL_AppResult SDL_AppEvent(void * App, SDL_Event * Event) {
 	if (Event -> type == SDL_EVENT_QUIT) return SDL_APP_SUCCESS;
 	if (Event -> type == SDL_EVENT_WINDOW_RESIZED) SDL_GetWindowSize(State -> Window, &State -> WindowWidth, &State -> WindowHeight);
 
+	if (Event -> type == SDL_EVENT_WINDOW_ENTER_FULLSCREEN) State -> FullScreen = true;
+	if (Event -> type == SDL_EVENT_WINDOW_LEAVE_FULLSCREEN) State -> FullScreen = false;
+
 	if (Event -> type == SDL_EVENT_KEY_DOWN) {
 		SDL_Keycode KeyCode = Event -> key.key;
 
 		if (KeyCode == SDLK_ESCAPE) return SDL_APP_SUCCESS;
-		if (KeyCode == SDLK_F11) if (!ToggleFullScreen(State -> Window, &State -> FullScreen)) return SDL_APP_FAILURE;
+
+		if (KeyCode == SDLK_F9) SetShowFPS(State, !State -> ShowFPS);
+		if (KeyCode == SDLK_F10) SetVSync(State, !State -> VSync);
+		if (KeyCode == SDLK_F11) SetFullScreen(State, !State -> FullScreen);
 	}
 
 	return SDL_APP_CONTINUE;
@@ -82,17 +93,35 @@ SDL_AppResult SDL_AppIterate(void * App) {
 
 	Uint64 CurrentTime = SDL_GetTicksNS();
 
-	if (State -> LastTime == 0.0f) State -> LastTime = CurrentTime;
+	if (State -> LastTime == 0) {
+		State -> StartTime = CurrentTime;
+		State -> LastTime = CurrentTime;
+	}
 
+	State -> ElapsedTime = static_cast <double> (CurrentTime - State -> StartTime) / 1000000000.0;
 	State -> DeltaTime = static_cast <double> (CurrentTime - State -> LastTime) / 1000000000.0;
 	State -> LastTime = CurrentTime;
-	State -> ElapsedTime += State -> DeltaTime;
 
-	if (State -> ShowFPS && !IsFullScreen(State -> Window)) {
-		double FPS = (State -> DeltaTime > 0.0) ? (1.0 / State -> DeltaTime) : 0.0;
-		std::string Title = std::string(State -> AppName) + " - " + std::to_string(static_cast <int> (FPS)) + " FPS";
-		SDL_SetWindowTitle(State -> Window, Title.c_str());
+	if (State -> ShowFPS && !State -> FullScreen) {
+		State -> FPSTimer += State -> DeltaTime;
+		State -> FPSFrameCount++;
+
+		if (State -> FPSTimer >= 0.15) {
+			double AverageFPS = static_cast <double> (State -> FPSFrameCount) / State -> FPSTimer;
+
+			char Title[128];
+			SDL_snprintf(Title, sizeof(Title), "%s - %d FPS", State -> AppName, static_cast <int> (AverageFPS));
+
+			if (!SDL_SetWindowTitle(State -> Window, Title)) {
+				SDL_Log("Failed to set window title!: %s", SDL_GetError());
+			}
+
+			State -> FPSTimer = 0.0;
+			State -> FPSFrameCount = 0;
+		}
 	}
+
+	// TODO: Refactor rendering to engine.cpp as modular for diffirent gpu pipelines
 
 	SDL_GPUCommandBuffer * CommandBuffer = SDL_AcquireGPUCommandBuffer(State -> GPUDevice);
 	if (!CommandBuffer) {
@@ -116,6 +145,8 @@ SDL_AppResult SDL_AppIterate(void * App) {
 
 		SDL_GPURenderPass * RenderPass = SDL_BeginGPURenderPass(CommandBuffer, &ColorTargetInfo, 1, NULL);
 
+		/*
+
 		SDL_BindGPUGraphicsPipeline(RenderPass, State -> Pipeline);
 
 		FrameUniforms UniformData {};
@@ -132,6 +163,8 @@ SDL_AppResult SDL_AppIterate(void * App) {
 		SDL_BindGPUVertexBuffers(RenderPass, 0, VertexBuffers.data(), static_cast <Uint32> (VertexBuffers.size()));
 
 		SDL_DrawGPUPrimitives(RenderPass, State -> VerticesCount, 1, 0, 0);
+
+		*/
 
 		SDL_EndGPURenderPass(RenderPass);
 	} else {

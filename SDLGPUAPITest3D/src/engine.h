@@ -1,3 +1,4 @@
 #pragma once
 
-// TODO: add/move stuff from old app.h and make functions for rendering like DrawFrame so main.cpp wont be long
+// TBA
+// TODO: add/move stuff from old app.h used for rendering and refactor them functions like DrawFrame so main.cpp wont be long and add pipeline management!
