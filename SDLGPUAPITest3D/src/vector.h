@@ -1,9 +1,7 @@
 #pragma once
 
-// TBU
-
 struct Vector2 {
-
+	// TBA
 };
 
 struct Vector3 {
@@ -49,5 +47,5 @@ struct Vector3 {
 };
 
 struct Vector4 {
-
+	// TBA
 };

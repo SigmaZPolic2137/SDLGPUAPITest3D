@@ -33,6 +33,6 @@ struct AppState {
 	SDL_GPUBuffer * VertexBuffer = nullptr;
 };
 
-bool SetFullScreen(AppState * AppState, bool Enabled);
-bool SetVSync(AppState * AppState, bool Enabled);
-bool SetShowFPS(AppState * AppState, bool Enabled);
+bool SetFullScreen(AppState * State, bool Enabled);
+bool SetVSync(AppState * State, bool Enabled);
+bool SetShowFPS(AppState * State, bool Enabled);
