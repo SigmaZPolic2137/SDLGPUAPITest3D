@@ -1,12 +1,12 @@
 #define SDL_MAIN_USE_CALLBACKS
 
 #include "app.h"
-#include "engine.h"
+#include "engine.h" // VCIC-Excluded: File content is TBA.
+#include "vector.h" // Temporary.
 
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_gpu.h>
-#include <SDL3/SDL_hints.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_log.h>
@@ -17,6 +17,8 @@
 #include <SDL3/SDL_video.h>
 
 SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[]) {
+	Vector3Test();
+
 	AppState * State = new AppState;
 	*App = State;
 
