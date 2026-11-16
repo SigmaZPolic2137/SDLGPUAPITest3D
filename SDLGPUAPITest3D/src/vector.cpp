@@ -50,13 +50,13 @@ std::string Vector3::ToString() const {
 	return std::string(Buffer);
 }
 
-static constexpr bool Near(float A, float B, float Epsilon = 1e-5f) {
+static constexpr bool NearFloat(float A, float B, float Epsilon = 1e-5f) {
     float Diff = A - B;
     return (Diff < 0.0f ? -Diff : Diff) < Epsilon;
 }
 
 
-void Vector3Test() {
+void Vector3::Test() {
     // Constructors & Data Access
 
     constexpr Vector3 DefaultVec;
@@ -114,8 +114,8 @@ void Vector3Test() {
 
     constexpr Vector3 DivResult = A / B;
     static_assert(DivResult.X() == 2.0f);
-    static_assert(Near(DivResult.Y(), 4.0f / 3.0f));
-    static_assert(Near(DivResult.Z(), 6.0f / 5.0f));
+    static_assert(NearFloat(DivResult.Y(), 4.0f / 3.0f));
+    static_assert(NearFloat(DivResult.Z(), 6.0f / 5.0f));
 
     constexpr Vector3 NegResult = -A;
     static_assert(NegResult == Vector3(-2.0f, -4.0f, -6.0f));
@@ -180,15 +180,15 @@ void Vector3Test() {
     constexpr float MagSq = LengthVec.MagnitudeSquared();
     static_assert(MagSq == 25.0f);
 
-    assert(Near(LengthVec.Magnitude(), 5.0f));
+    assert(NearFloat(LengthVec.Magnitude(), 5.0f));
 
     Vector3 UnitVec = LengthVec.Unit();
 
-    assert(Near(UnitVec.X(), 0.6f));
-    assert(Near(UnitVec.Y(), 0.8f));
-    assert(Near(UnitVec.Z(), 0.0f));
+    assert(NearFloat(UnitVec.X(), 0.6f));
+    assert(NearFloat(UnitVec.Y(), 0.8f));
+    assert(NearFloat(UnitVec.Z(), 0.0f));
 
-    assert(Near(UnitVec.Magnitude(), 1.0f));
+    assert(NearFloat(UnitVec.Magnitude(), 1.0f));
 
     // Dot & Cross Products
 
@@ -216,13 +216,13 @@ void Vector3Test() {
     constexpr float HalfPi = 1.57079632679f;
     constexpr float Pi = 3.14159265359f;
 
-    assert(Near(AngleRight.Angle(AngleUp, AngleForward), HalfPi));
-    assert(Near(AngleUp.Angle(AngleRight, AngleForward), -HalfPi));
-    assert(Near(AngleRight.Angle(-AngleRight, AngleForward), Pi));
-    assert(Near(AngleRight.Angle(AngleRight, AngleForward), 0.0f));
+    assert(NearFloat(AngleRight.Angle(AngleUp, AngleForward), HalfPi));
+    assert(NearFloat(AngleUp.Angle(AngleRight, AngleForward), -HalfPi));
+    assert(NearFloat(AngleRight.Angle(-AngleRight, AngleForward), Pi));
+    assert(NearFloat(AngleRight.Angle(AngleRight, AngleForward), 0.0f));
 
-    // right to forward = +-90 degree, looking from behind to forward at axis counterclockwise so -
-    assert(Near(AngleRight.Angle(AngleForward, AngleUp), -HalfPi));
+    // right to forward = +-90 degree, looking from up to down at axis counterclockwise so -
+    assert(NearFloat(AngleRight.Angle(AngleForward, AngleUp), -HalfPi));
 
     // Lerp
 

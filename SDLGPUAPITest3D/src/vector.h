@@ -3,8 +3,71 @@
 #include <string>
 
 struct Vector2 {
-	// TBA
+	float Data[2];
+
+	constexpr Vector2();
+	constexpr explicit Vector2(float XY);
+	constexpr Vector2(float X, float Y);
+
+	static constexpr Vector2 Zero() { return Vector2(0.0f, 0.0f); }
+	static constexpr Vector2 One() { return Vector2(1.0f, 1.0f); }
+	static constexpr Vector2 Right() { return Vector2(1.0f, 0.0f); }
+	static constexpr Vector2 Left() { return Vector2(-1.0f, 0.0f); }
+	static constexpr Vector2 Up() { return Vector2(0.0f, 1.0f); }
+	static constexpr Vector2 Down() { return Vector2(0.0f, -1.0f); }
+
+	constexpr float X() const;
+	constexpr float Y() const;
+	constexpr float & X();
+	constexpr float & Y();
+	constexpr float operator[](std::size_t Index) const;
+	constexpr float & operator[](std::size_t Index);
+
+	constexpr Vector2 operator-() const;
+	constexpr Vector2 operator+(const Vector2 & Other) const;
+	constexpr Vector2 operator-(const Vector2 & Other) const;
+	constexpr Vector2 operator*(const Vector2 & Other) const;
+	constexpr Vector2 operator/(const Vector2 & Other) const;
+	constexpr Vector2 operator*(float Factor) const;
+	constexpr Vector2 operator/(float Divisor) const;
+
+	friend constexpr Vector2 operator*(float Factor, const Vector2 & Target);
+	friend constexpr Vector2 operator/(float Divisor, const Vector2 & Target);
+
+	constexpr Vector2 & operator+=(const Vector2 & Other);
+	constexpr Vector2 & operator-=(const Vector2 & Other);
+	constexpr Vector2 & operator*=(const Vector2 & Other);
+	constexpr Vector2 & operator/=(const Vector2 & Other);
+	constexpr Vector2 & operator*=(float Factor);
+	constexpr Vector2 & operator/=(float Divisor);
+
+	constexpr bool operator==(const Vector2 & Other) const = default;
+	constexpr bool Near(const Vector2 & Other, float Epsilon = 1e-5f) const;
+
+	float Magnitude() const;
+	constexpr float MagnitudeSquared() const;
+	Vector2 Unit() const;
+	constexpr float Dot(const Vector2 & Other) const;
+	constexpr float Cross(const Vector2 & Other) const;
+	float Angle(const Vector2 & Other, bool Sign = false) const;
+	constexpr Vector2 Lerp(const Vector2 & Target, float Alpha) const;
+
+	constexpr Vector2 Absolute() const;
+	constexpr Vector2 Sign() const;
+	constexpr Vector2 Round() const;
+	constexpr Vector2 Floor() const;
+	constexpr Vector2 Ceil() const;
+	constexpr Vector2 Clamp(const Vector2 & Min, const Vector2 & Max) const;
+
+	std::string ToString() const;
+	static void Test();
 };
+
+//
+
+
+
+//
 
 struct Vector3 {
 	float Data[3];
@@ -12,6 +75,15 @@ struct Vector3 {
 	constexpr Vector3();
 	constexpr explicit Vector3(float XYZ);
 	constexpr Vector3(float X, float Y, float Z);
+
+	static constexpr Vector3 Zero() { return Vector3(0.0f, 0.0f, 0.0f); }
+	static constexpr Vector3 One() { return Vector3(1.0f, 1.0f, 1.0f); }
+	static constexpr Vector3 Right() { return Vector3(1.0f, 0.0f, 0.0f); }
+	static constexpr Vector3 Left() { return Vector3(-1.0f, 0.0f, 0.0f); }
+	static constexpr Vector3 Up() { return Vector3(0.0f, 1.0f, 0.0f); }
+	static constexpr Vector3 Down() { return Vector3(0.0f, -1.0f, 0.0f); }
+	static constexpr Vector3 Front() { return Vector3(0.0f, 0.0f, 1.0f); }
+	static constexpr Vector3 Back() { return Vector3(0.0f, 0.0f, -1.0f); }
 
 	constexpr float X() const;
 	constexpr float Y() const;
@@ -52,12 +124,14 @@ struct Vector3 {
 	constexpr Vector3 Lerp(const Vector3 & Target, float Alpha) const;
 
 	constexpr Vector3 Absolute() const;
+	constexpr Vector3 Sign() const;
 	constexpr Vector3 Round() const;
 	constexpr Vector3 Floor() const;
 	constexpr Vector3 Ceil() const;
 	constexpr Vector3 Clamp(const Vector3 & Min, const Vector3 & Max) const;
 
 	std::string ToString() const;
+	static void Test();
 };
 
 //
@@ -303,7 +377,3 @@ constexpr Vector3 Vector3::Clamp(const Vector3 & Min, const Vector3 & Max) const
 		ClampValue(this -> Z(), Min.Z(), Max.Z())
 	);
 }
-
-//
-
-void Vector3Test();

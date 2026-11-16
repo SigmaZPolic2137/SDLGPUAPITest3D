@@ -17,7 +17,8 @@
 #include <SDL3/SDL_video.h>
 
 SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[]) {
-	Vector3Test();
+	// Vector2::Test();
+	Vector3::Test();
 
 	AppState * State = new AppState;
 	*App = State;
