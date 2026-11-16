@@ -65,7 +65,71 @@ struct Vector2 {
 
 //
 
+constexpr Vector2::Vector2() : Data{0.0f, 0.0f} {}
+constexpr Vector2::Vector2(float XY) : Data{XY, XY} {}
+constexpr Vector2::Vector2(float X, float Y) : Data{X, Y} {}
 
+//
+
+constexpr float Vector2::X() const { return this -> Data[0]; }
+constexpr float Vector2::Y() const { return this -> Data[1]; }
+
+constexpr float & Vector2::X() { return this -> Data[0]; }
+constexpr float & Vector2::Y() { return this -> Data[1]; }
+
+constexpr float Vector2::operator[](std::size_t Index) const { return this -> Data[Index]; }
+constexpr float & Vector2::operator[](std::size_t Index) { return this -> Data[Index]; }
+
+//
+
+constexpr Vector2 Vector2::operator-() const {
+	return Vector2(
+		-this -> X(),
+		-this -> Y()
+	);
+}
+
+constexpr Vector2 Vector2::operator+(const Vector2 & Other) const {
+	return Vector2(
+		this -> X() + Other.X(),
+		this -> Y() + Other.Y()
+	);
+}
+
+constexpr Vector2 Vector2::operator-(const Vector2 & Other) const {
+	return Vector2(
+		this -> X() - Other.X(),
+		this -> Y() - Other.Y()
+	);
+}
+
+constexpr Vector2 Vector2::operator*(const Vector2 & Other) const {
+	return Vector2(
+		this -> X() * Other.X(),
+		this -> Y() * Other.Y()
+	);
+}
+
+constexpr Vector2 Vector2::operator/(const Vector2 & Other) const {
+	return Vector2(
+		this -> X() / Other.X(),
+		this -> Y() / Other.Y()
+	);
+}
+
+constexpr Vector2 Vector2::operator*(float Factor) const {
+	return Vector2(
+		this -> X() * Factor,
+		this -> Y() * Factor
+	);
+}
+
+constexpr Vector2 Vector2::operator/(float Divisor) const {
+	return Vector2(
+		this -> X() / Divisor,
+		this -> Y() / Divisor
+	);
+}
 
 //
 
@@ -120,6 +184,7 @@ struct Vector3 {
 	Vector3 Unit() const;
 	constexpr float Dot(const Vector3 & Other) const;
 	constexpr Vector3 Cross(const Vector3 & Other) const;
+	float Angle(const Vector3 & Other) const;
 	float Angle(const Vector3 & Other, const Vector3 & Axis) const;
 	constexpr Vector3 Lerp(const Vector3 & Target, float Alpha) const;
 
@@ -142,13 +207,13 @@ constexpr Vector3::Vector3(float X, float Y, float Z) : Data{X, Y, Z} {}
 
 //
 
-constexpr float Vector3::X() const { return Data[0]; }
-constexpr float Vector3::Y() const { return Data[1]; }
-constexpr float Vector3::Z() const { return Data[2]; }
+constexpr float Vector3::X() const { return this -> Data[0]; }
+constexpr float Vector3::Y() const { return this -> Data[1]; }
+constexpr float Vector3::Z() const { return this -> Data[2]; }
 
-constexpr float & Vector3::X() { return Data[0]; }
-constexpr float & Vector3::Y() { return Data[1]; }
-constexpr float & Vector3::Z() { return Data[2]; }
+constexpr float & Vector3::X() { return this -> Data[0]; }
+constexpr float & Vector3::Y() { return this -> Data[1]; }
+constexpr float & Vector3::Z() { return this -> Data[2]; }
 
 constexpr float Vector3::operator[](std::size_t Index) const { return this -> Data[Index]; }
 constexpr float & Vector3::operator[](std::size_t Index) { return this -> Data[Index]; }
@@ -287,9 +352,9 @@ constexpr bool Vector3::Near(const Vector3 & Other, float Epsilon) const {
 	};
 
 	return
-		AbsoluteValue(X() - Other.X()) <= Epsilon &&
-		AbsoluteValue(Y() - Other.Y()) <= Epsilon &&
-		AbsoluteValue(Z() - Other.Z()) <= Epsilon;
+		AbsoluteValue(this -> X() - Other.X()) <= Epsilon &&
+		AbsoluteValue(this -> Y() - Other.Y()) <= Epsilon &&
+		AbsoluteValue(this -> Z() - Other.Z()) <= Epsilon;
 }
 
 //
@@ -322,9 +387,21 @@ constexpr Vector3 Vector3::Absolute() const {
 	};
 
 	return Vector3(
-		AbsoluteValue(X()),
-		AbsoluteValue(Y()),
-		AbsoluteValue(Z())
+		AbsoluteValue(this -> X()),
+		AbsoluteValue(this -> Y()),
+		AbsoluteValue(this -> Z())
+	);
+}
+
+constexpr Vector3 Vector3::Sign() const {
+	const auto SignValue = [] (float Value) constexpr {
+		return static_cast <float> ((Value > 0) - (Value < 0));
+	};
+
+	return Vector3(
+		SignValue(this -> X()),
+		SignValue(this -> Y()),
+		SignValue(this -> Z())
 	);
 }
 
@@ -334,9 +411,9 @@ constexpr Vector3 Vector3::Round() const {
 	};
 
 	return Vector3(
-		RoundValue(X()),
-		RoundValue(Y()),
-		RoundValue(Z())
+		RoundValue(this -> X()),
+		RoundValue(this -> Y()),
+		RoundValue(this -> Z())
 	);
 }
 
@@ -347,9 +424,9 @@ constexpr Vector3 Vector3::Floor() const {
 	};
 
 	return Vector3(
-		FloorValue(X()),
-		FloorValue(Y()),
-		FloorValue(Z())
+		FloorValue(this -> X()),
+		FloorValue(this -> Y()),
+		FloorValue(this -> Z())
 	);
 }
 
@@ -360,9 +437,9 @@ constexpr Vector3 Vector3::Ceil() const {
 	};
 
 	return Vector3(
-		CeilValue(X()),
-		CeilValue(Y()),
-		CeilValue(Z())
+		CeilValue(this -> X()),
+		CeilValue(this -> Y()),
+		CeilValue(this -> Z())
 	);
 }
 
