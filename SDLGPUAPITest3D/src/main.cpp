@@ -2,7 +2,7 @@
 
 #include "app.h"
 #include "engine.h" // VCIC-Excluded: File content is TBA.
-#include "vector.h" // Vector2 and Vector3 tests.
+#include "math/vector3.h" // Vector3 test.
 
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_events.h>

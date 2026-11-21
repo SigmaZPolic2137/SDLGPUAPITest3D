@@ -143,15 +143,21 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\engine.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\vector.cpp" />
+    <ClCompile Include="src\math\matrix.cpp" />
+    <ClCompile Include="src\math\vector2.cpp" />
+    <ClCompile Include="src\math\vector3.cpp" />
+    <ClCompile Include="src\math\vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\engine.h" />
-    <ClInclude Include="src\vector.h" />
+    <ClInclude Include="src\math\matrix.h" />
+    <ClInclude Include="src\math\vector2.h" />
+    <ClInclude Include="src\math\vector3.h" />
+    <ClInclude Include="src\math\vector4.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\SDL\SDL3-3.4.20\VisualC\SDL\SDL.vcxproj">
