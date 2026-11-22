@@ -21,11 +21,11 @@ struct Vector3 {
 	static constexpr Vector3 Front() { return Vector3{0.0f, 0.0f, 1.0f}; }
 	static constexpr Vector3 Back() { return Vector3{0.0f, 0.0f, -1.0f}; }
 
-	constexpr float * Data();
-	constexpr const float * Data() const;
-
 	constexpr float operator[](std::size_t Index) const;
 	constexpr float & operator[](std::size_t Index);
+
+	constexpr const float * Data() const;
+	constexpr float * Data();
 
 	constexpr Vector3 operator-() const;
 	constexpr Vector3 operator+(const Vector3 & Other) const;
@@ -75,12 +75,19 @@ constexpr Vector3::Vector3(float X, float Y, float Z) : X{X}, Y{Y}, Z{Z} {}
 
 //
 
+constexpr const float * Vector3::Data() const {
+	return &this -> X;
+}
 
+constexpr float * Vector3::Data() {
+	return &this -> X;
+}
 
 //
 
 constexpr float Vector3::operator[](std::size_t Index) const {
 	assert(Index < 3 && "Vector3 index out of bounds!");
+
 	switch (Index % 3) {
 		case 2:  return this -> Z;
 		case 1:  return this -> Y;
@@ -91,6 +98,7 @@ constexpr float Vector3::operator[](std::size_t Index) const {
 
 constexpr float & Vector3::operator[](std::size_t Index) {
 	assert(Index < 3 && "Vector3 index out of bounds!");
+
 	switch (Index % 3) {
 		case 2:  return this -> Z;
 		case 1:  return this -> Y;

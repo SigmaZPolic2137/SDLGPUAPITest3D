@@ -2,7 +2,9 @@
 
 #include "app.h"
 #include "engine.h" // VCIC-Excluded: File content is TBA.
-#include "math/vector3.h" // Vector3 test.
+
+#include "math/vector2.h"
+#include "math/vector3.h"
 
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_events.h>
@@ -19,6 +21,14 @@
 SDL_AppResult SDL_AppInit(void ** App, int ArgumentCount, char * ArgumentValues[]) {
 	// Vector2::Test();
 	Vector3::Test();
+
+	Vector2 Magnitude{3.0f, 2.0f};
+	Magnitude += Vector2{0.0f, 2.0f};
+
+	SDL_Log("%.3f", Magnitude.MagnitudeSquared());
+	SDL_Log("%.3f", Magnitude.Magnitude());
+
+	// ------
 
 	AppState * State = new AppState;
 	*App = State;

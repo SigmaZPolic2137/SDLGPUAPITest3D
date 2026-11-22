@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cassert>	
+#include <cassert>
 #include <string>
 
-struct Vector2 {
+struct alignas(8) Vector2 {
 	float X{0.0f};
 	float Y{0.0f};
 
@@ -18,11 +18,11 @@ struct Vector2 {
 	static constexpr Vector2 Up() { return Vector2 {0.0f, 1.0f}; }
 	static constexpr Vector2 Down() { return Vector2 {0.0f, -1.0f}; }
 
-	constexpr float * Data();
-	constexpr const float * Data() const;
-
 	constexpr float operator[](std::size_t Index) const;
 	constexpr float & operator[](std::size_t Index);
+
+	constexpr const float * Data() const;
+	constexpr float * Data();
 
 	constexpr Vector2 operator-() const;
 	constexpr Vector2 operator+(const Vector2 & Other) const;
@@ -71,12 +71,19 @@ constexpr Vector2::Vector2(float X, float Y) : X {X}, Y {Y} {}
 
 //
 
+constexpr const float * Vector2::Data() const {
+	return &this -> X;
+}
 
+constexpr float * Vector2::Data() {
+	return &this -> X;
+}
 
 //
 
 constexpr float Vector2::operator[](std::size_t Index) const {
 	assert(Index < 2 && "Vector2 index out of bounds!");
+
 	switch (Index % 2) {
 		case 1:  return this -> Y;
 		case 0:
@@ -86,6 +93,7 @@ constexpr float Vector2::operator[](std::size_t Index) const {
 
 constexpr float & Vector2::operator[](std::size_t Index) {
 	assert(Index < 2 && "Vector2 index out of bounds!");
+
 	switch (Index % 2) {
 		case 1:  return this -> Y;
 		case 0:
@@ -142,4 +150,82 @@ constexpr Vector2 Vector2::operator/(float Divisor) const {
 		this -> X / Divisor,
 		this -> Y / Divisor
 	};
+}
+
+//
+
+constexpr Vector2 operator*(float Factor, const Vector2 & Target) {
+	return Vector2{
+		Factor * Target.X,
+		Factor * Target.Y
+	};
+}
+
+constexpr Vector2 operator/(float Divisor, const Vector2 & Target) {
+	return Vector2{
+		Divisor / Target.X,
+		Divisor / Target.Y
+	};
+}
+
+//
+
+constexpr Vector2 & Vector2::operator+=(const Vector2 & Other) {
+	this -> X += Other.X;
+	this -> Y += Other.Y;
+
+	return *this;
+}
+
+constexpr Vector2 & Vector2::operator-=(const Vector2 & Other) {
+	this -> X -= Other.X;
+	this -> Y -= Other.Y;
+	
+	return *this;
+}
+
+constexpr Vector2 & Vector2::operator*=(const Vector2 & Other) {
+	this -> X *= Other.X;
+	this -> Y *= Other.Y;
+
+	return *this;
+}
+
+constexpr Vector2 & Vector2::operator/=(const Vector2 & Other) {
+	this -> X /= Other.X;
+	this -> Y /= Other.Y;
+
+	return *this;
+}
+
+constexpr Vector2 & Vector2::operator*=(float Factor) {
+	this -> X *= Factor;
+	this -> Y *= Factor;
+
+	return *this;
+}
+
+constexpr Vector2 & Vector2::operator/=(float Divisor) {
+	this -> X /= Divisor;
+	this -> Y /= Divisor;
+
+	return *this;
+}
+
+//
+
+constexpr bool Vector2::Near(const Vector2 & Other, float Epsilon) const {
+	const auto AbsoluteValue = [] (float Value) constexpr {
+		return Value < 0.0f ? -Value : Value;
+	};
+
+	return
+		AbsoluteValue(this -> X - Other.X) <= Epsilon &&
+		AbsoluteValue(this -> Y - Other.Y) <= Epsilon;
+}
+
+//
+
+constexpr float Vector2::MagnitudeSquared() const {
+	return this -> X * this -> X + this -> Y * this -> Y;
 }
